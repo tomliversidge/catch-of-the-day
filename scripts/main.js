@@ -7,7 +7,7 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var History = ReactRouter.History;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
-
+var Catalyst = require('react-catalyst');
 var h = require('./helpers');
 
 var Fish = React.createClass({
@@ -42,6 +42,7 @@ var base = Rebase.createClass('https://blazing-torch-4071.firebaseio.com');
  */
 
 var App = React.createClass({
+    mixins: [Catalyst.LinkedStateMixin],
     getInitialState: function () {
         return {
             fishes: {},
@@ -101,7 +102,11 @@ var App = React.createClass({
                 <Order
                     fishes={this.state.fishes}
                     order={this.state.order}/>
-                <Inventory loadSamples={this.loadSamples} addFish={this.addFish}/>
+                <Inventory
+                    linkState={this.linkState}
+                    fishes={this.state.fishes}
+                    loadSamples={this.loadSamples}
+                    addFish={this.addFish}/>
             </div>
         )
     }
@@ -217,12 +222,31 @@ var Order = React.createClass({
  <Inventory/>
  */
 var Inventory = React.createClass({
+    renderInventory: function (key) {
+        return (
+            <div className="fish-edit" key={key}>
+                <input type="text" valueLink={this.props.linkState('fishes.'+key+'.name')}/>
+                <input type="text" valueLink={this.props.linkState('fishes.'+key+'.price')}/>
+                <select valueLink={this.props.linkState('fishes.' + key + '.status')}>
+                    <option value="unavailable">Sold Out</option>
+                    <option value="available">Fresh</option>
+                </select>
+                <textarea valueLink={this.props.linkState('fishes.'+key+'.desc')}>
+
+                </textarea>
+                <input type="text" valueLink={this.props.linkState('fishes.'+key+'.image')}/>
+                <button>Remove Fish</button>
+            </div>
+        )
+    },
     render: function () {
         return (
             <div>
                 <h2>Inventory</h2>
+                {Object.keys(this.props.fishes).map(this.renderInventory)}
                 <AddFishForm {...this.props}/>
                 <button onClick={this.props.loadSamples}>Load Sample Fishes</button>
+
             </div>
         )
     }
