@@ -1,17 +1,14 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-
-var ReactRouter = require('react-router');
-var Router = ReactRouter.Router;
-var Route = ReactRouter.Route;
-var createBrowserHistory = require('history/lib/createBrowserHistory');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Router, Route } from 'react-router';
+import { createHistory } from 'history';
 
 import NotFound from './components/NotFound';
 import StorePicker from './components/StorePicker';
 import App from './components/App';
 
 var routes = (
-    <Router history={createBrowserHistory()}>
+    <Router history={createHistory()}>
         <Route path="/" component={StorePicker}/>
         <Route path="/store/:storeId" component={App}/>
         <Route path="*" component={NotFound}/>
