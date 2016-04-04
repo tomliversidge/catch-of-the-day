@@ -103,6 +103,7 @@ class App extends React.Component{
                     loadSamples={this.loadSamples}
                     addFish={this.addFish}
                     removeFish={this.removeFish}
+                    {...this.props}
                 />
             </div>
         )
